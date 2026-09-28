@@ -18,6 +18,8 @@ export default function LoginForm() {
 
     const {
         mergeCart,
+        loadCart,
+        cart,
     } = useCart();
 
     const [form, setForm] = useState({
@@ -42,35 +44,62 @@ export default function LoginForm() {
             [name]: value,
         }));
     }
+    async function handleSubmit(event) {
+        event.preventDefault();
 
-   async function handleSubmit(event) {
-    event.preventDefault();
+        setError("");
 
-    setError("");
+        try {
+            setLoading(true);
 
-    try {
-        setLoading(true);
+            // console.log(
+            //     "========== BEFORE LOGIN =========="
+            // );
 
-        await login(form);
+            // console.log(
+            //     "CART:",
+            //     cart
+            // );
 
-        /*
-         * Merge guest cart into
-         * authenticated user's cart.
-         */
-        await mergeCart();
+            // console.log(
+            //     "GUEST CART ID:",
+            //     cart?.cartId
+            // );
 
-        router.push("/");
-    } catch (error) {
-        console.error(error);
+            const guestCartId =
+                cart?.cartId || null;
 
-        setError(
-            error.message ||
+            await login(form);
+
+            // console.log(
+            //     "========== AFTER LOGIN =========="
+            // );
+
+            // console.log(
+            //     "GUEST CART ID TO MERGE:",
+            //     guestCartId
+            // );
+
+            if (guestCartId) {
+                await mergeCart(
+                    guestCartId
+                );
+            }
+
+            await loadCart();
+
+            router.push("/");
+        } catch (error) {
+            console.error(error);
+
+            setError(
+                error.message ||
                 "Login failed."
-        );
-    } finally {
-        setLoading(false);
+            );
+        } finally {
+            setLoading(false);
+        }
     }
-}
 
     return (
         <AuthLayout

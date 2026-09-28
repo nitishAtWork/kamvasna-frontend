@@ -1,27 +1,37 @@
 import axios from "axios";
 
+import {
+    getAccessToken,
+} from "@/app/lib/token";
+
 const apiClient = axios.create({
     baseURL:
         process.env.NEXT_PUBLIC_API_URL,
+
     headers: {
         "Content-Type":
             "application/json",
     },
+
     withCredentials: true,
 });
 
 /*
- * Add access token to requests.
+ * Add access token.
  */
 apiClient.interceptors.request.use(
     (config) => {
-        if (typeof window !== "undefined") {
+        if (
+            typeof window !==
+            "undefined"
+        ) {
             const token =
-                localStorage.getItem(
-                    "accessToken"
-                );
+                getAccessToken();
 
             if (token) {
+                config.headers =
+                    config.headers || {};
+
                 config.headers.Authorization =
                     `Bearer ${token}`;
             }
@@ -34,23 +44,14 @@ apiClient.interceptors.request.use(
 );
 
 /*
- * Handle authentication errors.
+ * Don't redirect from here.
+ *
+ * AuthContext is responsible for
+ * authentication / refresh / logout.
  */
 apiClient.interceptors.response.use(
     (response) => response,
-
-    async (error) => {
-        if (
-            error.response?.status === 401
-        ) {
-            /*
-             * Don't immediately redirect here.
-             *
-             * AuthContext should handle
-             * refresh/logout logic.
-             */
-        }
-
+    (error) => {
         return Promise.reject(error);
     }
 );

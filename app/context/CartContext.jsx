@@ -6,14 +6,8 @@ import {
   useEffect,
   useState,
 } from "react";
-import {
-  getGuestCartId,
-  setGuestCartId,
-  clearGuestCartId,
-} from "@/app/lib/cartStorage";
 
-import cartService from "@/app/services/cartService";
-import { cartApi } from "@/app/lib/cart";
+import cartApi from "../lib/cart";
 import { useAuth } from "@/app/context/AuthContext";
 
 const CartContext =
@@ -23,9 +17,8 @@ export function CartProvider({
   children,
 }) {
   const {
-    user,
-    loading: authLoading,
     isAuthenticated,
+    loading: authLoading,
   } = useAuth();
 
   const [cart, setCart] =
@@ -34,115 +27,85 @@ export function CartProvider({
   const [loading, setLoading] =
     useState(true);
 
-  const [updating, setUpdating] =
-    useState(false);
-
-  const [updatingProductId, setUpdatingProductId] =
-    useState(null);
+  const [
+    updatingProductId,
+    setUpdatingProductId,
+  ] = useState(null);
 
   const [clearing, setClearing] =
     useState(false);
 
-  const items = cart?.items || [];
+  const items =
+    cart?.items || [];
 
-  const totals = cart?.totals || {
-    subtotal: 0,
-    itemCount: 0,
-    total: 0,
-  };
+  const totals =
+    cart?.totals || {
+      subtotal: 0,
+      itemCount: 0,
+      total: 0,
+    };
 
-  /*
-   * Load current cart.
-   *
-   * Backend decides whether this is:
-   * - guest cart
-   * - authenticated user cart
-   */
-  /*
-     * Load cart.
-     */
-  async function loadCart() {
-    /*
-     * Don't load anything until
-     * authentication state is known.
-     */
-    if (authLoading) {
-      return;
-    }
-
+  const loadCart = async () => {
     try {
-      setLoading(true);
+        setLoading(true);
 
-      /*
-       * Logged-in user:
-       *
-       * Backend identifies cart
-       * using authenticated userId.
-       */
-      if (isAuthenticated) {
         const response =
-          await cartApi.getCart();
+            await cartApi.getCart();
 
-        const currentCart =
-          response.data?.cart ||
-          response.data;
-
-        setCart(currentCart);
-
-        return;
-      }
-
-      /*
-       * Guest user.
-       */
-      const guestCartId =
-        getGuestCartId();
-
-      const response =
-        await cartApi.getCart(
-          guestCartId
+        console.log(
+            "========== LOAD CART =========="
         );
 
-      const currentCart =
-        response.data?.cart ||
-        response.data;
-
-      /*
-       * Save guest cart ID.
-       */
-      if (
-        currentCart?.cartId
-      ) {
-        setGuestCartId(
-          currentCart.cartId
+        console.log(
+            "CART RESPONSE:",
+            response.data
         );
-      }
 
-      setCart(currentCart);
+        const data =
+            response?.data?.data ||
+            response?.data;
+
+        console.log(
+            "CART DATA:",
+            data
+        );
+
+        console.log(
+            "CART ID:",
+            data?.cart?.cartId
+        );
+
+        if (data?.cart) {
+            setCart({
+                ...data.cart,
+                totals: data.totals,
+            });
+        } else {
+            setCart(null);
+        }
     } catch (error) {
-      console.error(
-        "Failed to load cart:",
-        error
-      );
+        console.error(
+            "Failed to load cart:",
+            error
+        );
 
-      setCart(null);
+        setCart(null);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  }
+};
 
-  /*
-   * Add product
-   */
   const addToCart = async (
     productId,
     quantity = 1
   ) => {
     try {
-      setUpdatingProductId(productId);
+      setUpdatingProductId(
+        productId
+      );
 
       const response =
-        await cartService.addItem({
+        await cartApi.addItem({
           productId,
           quantity,
         });
@@ -154,89 +117,121 @@ export function CartProvider({
       if (data?.cart) {
         setCart({
           ...data.cart,
-          totals: data.totals,
+          totals:
+            data.totals,
         });
       }
 
       return response;
     } finally {
-      setUpdatingProductId(null);
+      setUpdatingProductId(
+        null
+      );
     }
   };
 
-  /*
-   * Update quantity
-   */
-  const updateQuantity = async (
-    productId,
-    quantity
-  ) => {
-    try {
-      setUpdatingProductId(productId);
-
-      const response =
-        await cartService.updateItem(
-          productId,
-          quantity
-        );
-
-      const data =
-        response?.data?.data ||
-        response?.data;
-
-      if (data?.cart) {
-        setCart({
-          ...data.cart,
-          totals: data.totals,
-        });
-      }
-
-      return response;
-    } finally {
-      setUpdatingProductId(null);
-    }
-  };
-
-  /*
-   * Remove product
-   */
-  const removeFromCart = async (
-    productId
-  ) => {
-    try {
-      setUpdatingProductId(productId);
-
-      const response =
-        await cartService.removeItem(
+  const updateQuantity =
+    async (
+      productId,
+      quantity
+    ) => {
+      try {
+        setUpdatingProductId(
           productId
         );
 
-      const data =
-        response?.data?.data ||
-        response?.data;
+        const response =
+          await cartApi.updateItem(
+            productId,
+            quantity
+          );
 
-      if (data?.cart) {
-        setCart({
-          ...data.cart,
-          totals: data.totals,
-        });
+        const data =
+          response?.data?.data ||
+          response?.data;
+
+        if (data?.cart) {
+          setCart({
+            ...data.cart,
+            totals:
+              data.totals,
+          });
+        }
+
+        return response;
+      } finally {
+        setUpdatingProductId(
+          null
+        );
       }
+    };
 
-      return response;
-    } finally {
-      setUpdatingProductId(null);
-    }
-  };
+  const removeFromCart =
+    async (productId) => {
+      try {
+        setUpdatingProductId(
+          productId
+        );
 
-  /*
-   * Clear cart
-   */
-  const clearCart = async () => {
+        const response =
+          await cartApi.removeItem(
+            productId
+          );
+
+        const data =
+          response?.data?.data ||
+          response?.data;
+
+        if (data?.cart) {
+          setCart({
+            ...data.cart,
+            totals:
+              data.totals,
+          });
+        }
+
+        return response;
+      } finally {
+        setUpdatingProductId(
+          null
+        );
+      }
+    };
+
+  const clearCart =
+    async () => {
+      try {
+        setClearing(true);
+
+        const response =
+          await cartApi.clearCart();
+
+        const data =
+          response?.data?.data ||
+          response?.data;
+
+        if (data?.cart) {
+          setCart({
+            ...data.cart,
+            totals:
+              data.totals,
+          });
+        } else {
+          setCart(null);
+        }
+
+        return response;
+      } finally {
+        setClearing(false);
+      }
+    };
+
+  const mergeCart = async (cartId) => {
     try {
-      setUpdating(true);
-
       const response =
-        await cartService.clearCart();
+        await cartApi.mergeCart(
+          cartId
+        );
 
       const data =
         response?.data?.data ||
@@ -247,80 +242,52 @@ export function CartProvider({
           ...data.cart,
           totals: data.totals,
         });
-      } else {
-        setCart(null);
       }
 
       return response;
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  /*
-   * Guest → authenticated cart
-   */
-  /*
-   * Merge guest cart after login.
-   */
-  async function mergeCart() {
-    const guestCartId =
-      getGuestCartId();
-
-    /*
-     * Nothing to merge.
-     */
-    if (!guestCartId) {
-      return loadCart();
-    }
-
-    const response =
-      await cartApi.merge(
-        guestCartId
+    } catch (error) {
+      console.error(
+        "Failed to merge cart:",
+        error
       );
 
-    const updatedCart =
-      response.data?.cart ||
-      response.data;
-
-    setCart(updatedCart);
-
-    /*
-     * Guest cart is now merged.
-     */
-    clearGuestCartId();
-
-    return response;
-  }
+      throw error;
+    }
+  };
 
   /*
-   * Initial cart load
+   * Wait until AuthContext knows
+   * whether the user is authenticated.
    */
   useEffect(() => {
+    if (authLoading) {
+      return;
+    }
+
     loadCart();
-  }, []);
-
-  const value = {
-    cart,
-    items,
-    totals,
-
-    loading,
-
-    updatingProductId,
-    clearing,
-
-    loadCart,
-    addToCart,
-    updateQuantity,
-    removeFromCart,
-    clearCart,
-    mergeCart,
-  };
+  }, [
+    authLoading,
+    isAuthenticated,
+  ]);
 
   return (
     <CartContext.Provider
-      value={value}
+      value={{
+        cart,
+        items,
+        totals,
+
+        loading,
+        updatingProductId,
+        clearing,
+
+        loadCart,
+        addToCart,
+        updateQuantity,
+        removeFromCart,
+        clearCart,
+        mergeCart,
+      }}
     >
       {children}
     </CartContext.Provider>

@@ -1,69 +1,63 @@
-import { apiRequest } from "@/app/lib/api";
+import apiClient from "@/app/lib/apiClient";
 
 export const cartApi = {
-    getCart(cartId) {
-        const query = cartId
-            ? `?cartId=${encodeURIComponent(
-                  cartId
-              )}`
-            : "";
+  getCart(cartId = null) {
+    const query = cartId
+      ? `?cartId=${encodeURIComponent(
+        cartId
+      )}`
+      : "";
 
-        return apiRequest(
-            `/cart${query}`
-        );
-    },
+    return apiClient.get(
+      `/cart${query}`
+    );
+  },
 
-    addItem(data) {
-        return apiRequest(
-            "/cart/items",
-            {
-                method: "POST",
-                body: data,
-            }
-        );
-    },
+  addItem({
+    productId,
+    quantity = 1,
+  }) {
+    return apiClient.post(
+      "/cart/items",
+      {
+        productId,
+        quantity,
+      }
+    );
+  },
 
-    updateItem(
-        itemId,
-        data
-    ) {
-        return apiRequest(
-            `/cart/items/${itemId}`,
-            {
-                method: "PATCH",
-                body: data,
-            }
-        );
-    },
+  updateItem(
+    productId,
+    quantity
+  ) {
+    return apiClient.patch(
+      `/cart/items/${productId}`,
+      {
+        quantity,
+      }
+    );
+  },
 
-    removeItem(itemId) {
-        return apiRequest(
-            `/cart/items/${itemId}`,
-            {
-                method: "DELETE",
-            }
-        );
-    },
+  removeItem(productId) {
+    return apiClient.delete(
+      `/cart/items/${productId}`
+    );
+  },
 
-    clearCart() {
-        return apiRequest(
-            "/cart",
-            {
-                method: "DELETE",
-            }
-        );
-    },
+  clearCart() {
+    return apiClient.delete(
+      "/cart"
+    );
+  },
 
-    merge(cartId) {
-        return apiRequest(
-            "/cart/merge",
-            {
-                method: "POST",
-                body: {
-                    cartId,
-                },
-            }
-        );
-    },
-    
+  mergeCart(cartId) {
+    return apiClient.post(
+      "/cart/merge",
+      {
+        cartId,
+      }
+    );
+  },
 };
+
+export default cartApi;
