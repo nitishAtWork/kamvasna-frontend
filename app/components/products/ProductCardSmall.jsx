@@ -43,10 +43,10 @@ const ProductCardSmall = ({ product }) => {
             )
             : 0;
     return (
-        <div className="py-4 block group">
+        <div className="py-4 block group overflow-hidden rounded-lg">
             <div className="w-full relative overflow-hidden">
                 <Link href={`/products/${product?.slug}`} title={product?.name} className="w-full relative">
-                    <Image src={product?.img} height={200} width={200} className="w-full h-auto max-w-50 max-h-[130px] object-cover" title={product?.name} alt={product?.name} />
+                    <Image src={product?.img} height={200} width={200} className="w-full h-auto max-w-50 rounded-lg max-h-[130px] object-cover" title={product?.name} alt={product?.name} />
 
                     {discountPercentage >
                         0 && (
