@@ -12,6 +12,7 @@ import { useState } from "react";
 import { useCart } from "@/app/context/CartContext";
 import ProductQuantity from "./ProductQuantity";
 import { getImageUrl } from "@/app/lib/imageUrl";
+import ProductImages from "./ProductImages";
 
 export default function ProductDetails({
   product,
@@ -94,8 +95,8 @@ export default function ProductDetails({
 
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-14">
         {/* Product image */}
-        <div className="relative aspect-square overflow-hidden rounded-2xl bg-gray-100">
-          {product.img ? (
+        <div className="relative">
+          {/* {product.img ? (
             <Image
               src={getImageUrl(
                 product.img
@@ -112,7 +113,9 @@ export default function ProductDetails({
             <div className="flex h-full items-center justify-center text-gray-400">
               No Image
             </div>
-          )}
+          )} */}
+
+          <ProductImages product={product} />
 
           {discountPercentage >
             0 && (

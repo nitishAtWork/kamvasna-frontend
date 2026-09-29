@@ -5,6 +5,7 @@ import { FiTrash2 } from "react-icons/fi";
 
 import CartQuantity from "./CartQuantity";
 import { useCart } from "@/app/context/CartContext";
+import { getImageUrl } from "@/app/lib/imageUrl";
 
 export default function CartItem({
     item,
@@ -21,7 +22,7 @@ export default function CartItem({
         return null;
     }
 
-      const isUpdating =
+    const isUpdating =
         updatingProductId === product._id;
 
     const itemTotal =
@@ -62,8 +63,11 @@ export default function CartItem({
             <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                 {product.img ? (
                     <Image
-                        src={product.img}
+                        src={getImageUrl(
+                            product.img
+                        )}
                         alt={product.name}
+                        title={product.name}
                         fill
                         sizes="96px"
                         className="object-cover"

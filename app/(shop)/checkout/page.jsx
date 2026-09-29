@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useCart } from "@/app/context/CartContext";
 
+import { orderApi } from "@/app/lib/orders";
+
 import CheckoutSteps from "@/app/components/checkout/CheckoutSteps";
 import AddressForm from "@/app/components/checkout/AddressForm";
 import CheckoutSummary from "@/app/components/checkout/CheckoutSummary";
@@ -26,6 +28,11 @@ export default function CheckoutPage() {
 
     const [placingOrder, setPlacingOrder] =
         useState(false);
+
+    const [
+        paymentMethod,
+        setPaymentMethod,
+    ] = useState("ONLINE");
 
     /*
      * User must be logged in before checkout.
@@ -98,34 +105,39 @@ export default function CheckoutPage() {
 
     const handlePlaceOrder =
         async () => {
-            /*
-             * We will connect this
-             * after matching your
-             * actual backend
-             * createOrder payload.
-             */
             if (!address) {
                 return;
             }
 
-            setPlacingOrder(true);
-
             try {
-                console.log(
-                    "PLACE ORDER:",
-                    {
-                        address,
-                        items,
-                        totals,
-                    }
-                );
+                setPlacingOrder(true);
 
-                /*
-                 * Next step:
-                 *
-                 * await orderApi.createOrder(...)
-                 */
+                const shippingAddress = {
+                    name: address.fullName,
+                    phone: address.phone,
+                    addressLine1:
+                        address.addressLine1,
+                    addressLine2:
+                        address.addressLine2,
+                    city: address.city,
+                    state: address.state,
+                    postalCode:
+                        address.postalCode,
+                    country:
+                        address.country,
+                };
 
+                const response =
+                    await orderApi.create({
+                        shippingAddress,
+                        paymentMethod:
+                            "ONLINE",
+                    });
+
+                // console.log(
+                //     "CREATE ORDER RESPONSE:",
+                //     response
+                // );
             } catch (error) {
                 console.error(
                     "Order creation failed:",
@@ -157,6 +169,68 @@ export default function CheckoutPage() {
                             handleAddressChange
                         }
                     />
+
+                    <div className="rounded-xl border border-gray-200 bg-white p-5">
+                        <h2 className="text-lg font-semibold text-gray-900">
+                            Payment Method
+                        </h2>
+
+                        <div className="mt-4 space-y-3">
+                            <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 p-4">
+                                <input
+                                    type="radio"
+                                    name="paymentMethod"
+                                    value="ONLINE"
+                                    checked={
+                                        paymentMethod ===
+                                        "ONLINE"
+                                    }
+                                    onChange={(event) =>
+                                        setPaymentMethod(
+                                            event.target.value
+                                        )
+                                    }
+                                />
+
+                                <div>
+                                    <p className="font-medium text-gray-900">
+                                        Online Payment
+                                    </p>
+
+                                    <p className="text-sm text-gray-500">
+                                        Pay securely online.
+                                    </p>
+                                </div>
+                            </label>
+
+                            <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 p-4">
+                                <input
+                                    type="radio"
+                                    name="paymentMethod"
+                                    value="COD"
+                                    checked={
+                                        paymentMethod ===
+                                        "COD"
+                                    }
+                                    onChange={(event) =>
+                                        setPaymentMethod(
+                                            event.target.value
+                                        )
+                                    }
+                                />
+
+                                <div>
+                                    <p className="font-medium text-gray-900">
+                                        Cash on Delivery
+                                    </p>
+
+                                    <p className="text-sm text-gray-500">
+                                        Pay when your order arrives.
+                                    </p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Right */}

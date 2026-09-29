@@ -94,9 +94,9 @@ export default function ProductCard({
         <Link
           href={`/products/${product.slug}`}
         >
-          <h2 className="mt-1 line-clamp-2 min-h-10 text-sm font-semibold text-gray-900 transition hover:text-gray-600">
+          <p className="mt-1 line-clamp-2 min-h-10 text-sm font-semibold text-gray-900 transition hover:text-gray-600">
             {product.name}
-          </h2>
+          </p>
         </Link>
 
         {/* Price */}
