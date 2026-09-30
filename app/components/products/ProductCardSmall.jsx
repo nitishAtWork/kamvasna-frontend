@@ -46,7 +46,7 @@ const ProductCardSmall = ({ product }) => {
         <div className="py-4 block group overflow-hidden rounded-lg">
             <div className="w-full relative overflow-hidden">
                 <Link href={`/products/${product?.slug}`} title={product?.name} className="w-full relative">
-                    <Image src={product?.img} height={200} width={200} className="w-full h-auto max-w-50 rounded-lg max-h-[130px] object-cover" title={product?.name} alt={product?.name} />
+                    <Image src={product?.img} height={200} width={200} className="w-full h-auto min-h-30 max-w-50 rounded-lg max-h-[130px] object-cover" title={product?.name} alt={product?.name} />
 
                     {discountPercentage >
                         0 && (
@@ -74,6 +74,25 @@ const ProductCardSmall = ({ product }) => {
                     </button>
 
                 </div>
+            </div>
+
+            {/* Price */}
+            <div className="mt-3 flex items-center gap-2">
+                <span className="text-sm text-gray-900">
+                    ₹
+                    {product.price.toLocaleString(
+                        "en-IN"
+                    )}
+                </span>
+
+                {hasDiscount && (
+                    <span className="text-xs text-gray-400 line-through">
+                        ₹
+                        {product.compareAtPrice.toLocaleString(
+                            "en-IN"
+                        )}
+                    </span>
+                )}
             </div>
             <Link href={`/products/${product?.slug}`} title={product?.name} className="line-clamp-2 text-sm mt-1.5 group-hover:text-red-600 transition-all duration-300 "  >{product?.name}</Link>
         </div>

@@ -58,6 +58,7 @@ export default function NavClient({ siteInfo, product = [] }) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [mobileProductOpen, setMobileProductOpen] = useState(false);
     const [search, setSearch] = useState("");
+    const [scroll, setScroll] = useState(false);
 
     const { totals } = useCart();
     const { user, logout } = useAuth();
@@ -82,21 +83,43 @@ export default function NavClient({ siteInfo, product = [] }) {
         setSearch("");
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setScroll(window.scrollY > 450);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    // Canonical tag
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            let canonical = document.querySelector("link[rel='canonical']");
+            if (!canonical) {
+                canonical = document.createElement("link");
+                canonical.setAttribute("rel", "canonical");
+                document.head.appendChild(canonical);
+            }
+            canonical.setAttribute("href", window.location.href);
+        }
+    }, []);
+
     return (
 
-        <header className="sticky top-0 z-50 text-white">
-
+        <header className={`z-50 text-white ${scroll ? "fixed top-0 left-0 w-full shadow-lg sroll-nav " : "relative"}`}>
             {/* ================================================= */}
             {/* TOP OFFER BAR */}
             {/* ================================================= */}
 
-            <div className="relative overflow-hidden border-b border-white/10 bg-[#151515]">
-
-                <div className="mx-auto flex h-9 container items-center justify-center">
+            <div className={`relative overflow-hidden border-b border-white/10 ${scroll?"hidden":"block"}`}>
+                <Image width={2000} height={200} className="w-full h-auto absolute left-0 top-0 inset-0" src="/img/1wt.webp" alt="Banner" title="Banner" />
+                <div className={`mx-auto h-11 container items-center justify-center flex relative z-[4]`}>
 
                     <div
                         key={offerIndex}
-                        className="flex animate-[fadeIn_0.5s_ease-in-out] items-center gap-2 text-[11px] font-medium tracking-wide sm:text-xs"
+                        className="flex animate-[fadeIn_0.5s_ease-in-out] items-center gap-2 text-[13px] font-semibold tracking-wide sm:text-sm"
                     >
 
                         {(() => {
@@ -106,10 +129,10 @@ export default function NavClient({ siteInfo, product = [] }) {
                                 <>
                                     <Icon
                                         size={13}
-                                        className="text-white/70"
+                                        className="text-black/70"
                                     />
 
-                                    <span className="text-white/65">
+                                    <span className="text-black/65">
                                         {offers[offerIndex].text}
                                     </span>
 
@@ -119,7 +142,7 @@ export default function NavClient({ siteInfo, product = [] }) {
 
                                     <Link
                                         href={offers[offerIndex].href}
-                                        className="group flex items-center gap-1 font-semibold text-white transition"
+                                        className="group flex items-center gap-1 font-semibold text-black transition"
                                     >
                                         {offers[offerIndex].action}
 
@@ -135,10 +158,6 @@ export default function NavClient({ siteInfo, product = [] }) {
                     </div>
 
                 </div>
-
-                {/* Small decorative glow */}
-                <div className="pointer-events-none absolute left-1/2 top-0 h-full w-40 -translate-x-1/2 bg-white/[0.03] blur-2xl" />
-
             </div>
 
 
