@@ -33,14 +33,41 @@ export default function Testimonial() {
             message:
                 "Very satisfied with the quality and support. I would definitely recommend their services to others."
         },
+        {
+            name: "Rahul Sharma",
+            role: "Happy Customer",
+            rating: 5,
+            message:
+                "Excellent service and a great experience. The team was professional, helpful, and delivered exactly what we needed."
+        },
+        {
+            name: "Priya Patel",
+            role: "Happy Customer",
+            rating: 5,
+            message:
+                "Very satisfied with the quality and support. I would definitely recommend their services to others."
+        },
     ];
     return (
         <>
-            <div className="py-10 md:py-15 relative overflow-hidden bg-gray-200 px-5">
+            <div className="py-10 md:py-15 relative overflow-hidden bg-gray-100">
                 <div className="container">
-                    <div className="text-center mb-7">
-                        <span className="block text-3xl font-semibold flex justify-center gap-3"><IoHappyOutline className="text-4xl" /> <span className="text-[var(--color-2)]">2,59,000+</span>
-                            Happy customer</span>
+                    <div className="grid grid-cols-2 items-center mb-10">
+                        <div className="flex items-center gap-4">
+                            <span className="text-6xl font-bold text-[#e0b000] block whitespace-nowrap">4.9 /5</span>
+                            <div>
+                                <div className=" flex gap-1 text-lg text-yellow-400">
+                                    {Array.from({ length: 5 }, (_, star) => (
+                                        <span className="text-2xl" key={star}>★</span>
+                                    ))}
+                                </div>
+                                <p className="text-gray-600 text-sm">
+                                    <span className="underline font-medium">Stylebee</span> has already collected <strong>1233</strong> + reviews</p>
+                            </div>
+                        </div>
+                        <div className="flex justify-end">
+                            <span className="text-[16px] font-medium underline">Add Your Review</span>
+                        </div>
                     </div>
                     <div className="reveal reveal-delay-1 is-revealed">
                         <Swiper
@@ -62,14 +89,14 @@ export default function Testimonial() {
                             }}
                         >
                             {testimonials.map((value, index) => (
-                                <SwiperSlide key={index} className="h-auto my-5 mb-12">
+                                <SwiperSlide key={index} className=" my-5 ">
                                     <TestimonialCard value={value} />
                                 </SwiperSlide>
                             ))}
 
                         </Swiper>
                         {/* LEFT ARROW */}
-                        <div className="flex gap-2.5 items-center lg:justify-start justify-center mt-3">
+                        <div className="flex gap-2.5 items-center justify-center mt-3">
                             <button
                                 type="button"
                                 className="testi-prev h-[54px] w-[54px] flex items-center justify-center rounded-full bg-white text-[#20258f] shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all hover:bg-[var(--color-2)] hover:text-white md:flex "
@@ -86,6 +113,7 @@ export default function Testimonial() {
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </>
