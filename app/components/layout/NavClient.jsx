@@ -114,12 +114,12 @@ export default function NavClient({ siteInfo, product = [] }) {
             {/* ================================================= */}
 
             <div className={`relative overflow-hidden border-b border-white/10 ${scroll?"hidden":"block"}`}>
-                <Image width={2000} height={200} className="w-full h-auto absolute left-0 top-0 inset-0" src="/img/1wt.webp" alt="Banner" title="Banner" />
+                <Image width={2000} height={200} className="w-full md:block hidden h-auto absolute left-0 top-0 inset-0" src="/img/1wt.webp" alt="Banner" title="Banner" />
                 <div className={`mx-auto h-11 container items-center justify-center flex relative z-[4]`}>
 
                     <div
                         key={offerIndex}
-                        className="flex animate-[fadeIn_0.5s_ease-in-out] items-center gap-2 text-[13px] font-semibold tracking-wide sm:text-sm"
+                        className="flex animate-[fadeIn_0.5s_ease-in-out] items-center gap-2 text-[10px] font-semibold tracking-wide sm:text-sm"
                     >
 
                         {(() => {
@@ -168,7 +168,7 @@ export default function NavClient({ siteInfo, product = [] }) {
             <div className="border-b border-white/10 bg-[#0a0a0a]/95 backdrop-blur-xl">
 
 
-                <div className="flex h-[76px] container items-center gap-6">
+                <div className="flex h-[76px] container items-center gap-6 justify-between">
 
                     {/* ================================================= */}
                     {/* LOGO */}
@@ -198,7 +198,7 @@ export default function NavClient({ siteInfo, product = [] }) {
                         {/* Home */}
                         <Link
                             href="/"
-                            className="relative py-7 text-sm font-medium text-white/65 transition hover:text-white"
+                            className="relative py-7 text-sm font-medium text-white/85 transition hover:text-white"
                         >
                             Home
 
@@ -215,7 +215,7 @@ export default function NavClient({ siteInfo, product = [] }) {
                             {/* Products button */}
                             <Link
                                 href="/products"
-                                className="flex items-center gap-1.5 py-7 text-sm font-medium text-white/65 transition hover:text-white"
+                                className="flex items-center gap-1.5 py-7 text-sm font-medium text-white/85 transition hover:text-white"
                             >
                                 Products
 
@@ -381,7 +381,7 @@ export default function NavClient({ siteInfo, product = [] }) {
                         {/* About */}
                         <Link
                             href="/about"
-                            className="py-7 text-sm font-medium text-white/65 transition hover:text-white"
+                            className="py-7 text-sm font-medium text-white/85 transition hover:text-white"
                         >
                             About
                         </Link>
@@ -390,7 +390,7 @@ export default function NavClient({ siteInfo, product = [] }) {
                         {/* Contact */}
                         <Link
                             href="/contact"
-                            className="py-7 text-sm font-medium text-white/65 transition hover:text-white"
+                            className="py-7 text-sm font-medium text-white/85 transition hover:text-white"
                         >
                             Contact
                         </Link>
@@ -407,7 +407,7 @@ export default function NavClient({ siteInfo, product = [] }) {
 
                             <FiSearch
                                 size={17}
-                                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 transition group-focus-within:text-white/70"
+                                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 transition group-focus-within:text-white/70"
                             />
 
                             <input
@@ -435,20 +435,20 @@ export default function NavClient({ siteInfo, product = [] }) {
                         {/* Account */}
                         {user ? (
 
-                            <div className="hidden items-center gap-3 md:flex">
+                            <div className="items-center gap-3 flex">
 
                                 <Link
                                     href="/account"
-                                    className="flex h-10 items-center gap-2 rounded-full px-3 text-sm font-medium text-white/65 transition hover:bg-white/[0.06] hover:text-white"
+                                    className="flex h-10 items-center gap-2 rounded-full px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.06] hover:text-white"
                                 >
                                     <FiUser size={18} />
-                                    Account
+                                    <span className="md:block hidden">Account</span>
                                 </Link>
 
                                 <button
                                     type="button"
                                     onClick={handleLogout}
-                                    className="text-sm text-white/35 transition hover:text-red-400"
+                                    className="text-sm text-white/65 transition hover:text-red-400 md:block hidden"
                                 >
                                     Logout
                                 </button>
@@ -459,7 +459,7 @@ export default function NavClient({ siteInfo, product = [] }) {
 
                             <Link
                                 href="/login"
-                                className="hidden h-10 items-center gap-2 rounded-full px-3 text-sm font-medium text-white/65 transition hover:bg-white/[0.06] hover:text-white md:flex"
+                                className="flex h-10 items-center gap-2 rounded-full px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.06] hover:text-white "
                             >
                                 <FiUser size={18} />
                                 Login
@@ -471,7 +471,7 @@ export default function NavClient({ siteInfo, product = [] }) {
                         {/* Cart */}
                         <Link
                             href="/cart"
-                            className="relative flex h-10 w-10 items-center justify-center rounded-full text-white/65 transition hover:bg-white/[0.07] hover:text-white"
+                            className="relative flex h-10 w-10 items-center justify-center rounded-full text-white/85 transition hover:bg-white/[0.07] hover:text-white"
                             aria-label="Shopping cart"
                         >
 

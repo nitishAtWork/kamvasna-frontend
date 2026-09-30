@@ -72,7 +72,7 @@ const Benifits = () => {
             <div className="container">
                 <div className="relative overflow-hidden bg-[url('/img/bg-4.jpg')] bg-center bg-cover from-black via-gray-800 to-red-600 px-6 py-10 shadow-2xl rounded-xl shadow-orange-200/50 sm:px-10 lg:px-14 lg:py-14">
                     {/* overlay */}
-                    <div className="absolute inset-0 bg-black/40" />
+                    <div className="absolute inset-0 bg-black/50" />
                     {/* Decorative circles */}
                     <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full border-[40px] border-white/10" />
                     <div className="absolute -bottom-32 right-20 h-72 w-72 rounded-full border-[50px] border-white/5" />
@@ -87,7 +87,7 @@ const Benifits = () => {
                                 Made For You
                             </div>
 
-                            <div className="text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                            <div className="text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
                                 More than
                                 <span className="block text-orange-100">
                                     just shopping.
@@ -115,7 +115,7 @@ const Benifits = () => {
                         </div>
 
                         {/* Right - floating visual */}
-                        <div className="relative mx-auto w-full max-w-md">
+                        <div className="relative mx-auto w-full max-w-md md:block hidden">
 
                             {/* Main white card */}
                             <div className="relative rounded-[2rem] bg-white p-6 shadow-2xl sm:p-8">

@@ -39,6 +39,8 @@ const GallerySlider = () => {
     return (
         <section className="pb-18 relative">
 
+            <Image src={'/img/banner-1.png'} width={1800} height={500} className="w-full h-auto mb-18" alt="Banner" title="Banner" />
+
             <div className="container">
 
                 {gallery?.length > 0 && (

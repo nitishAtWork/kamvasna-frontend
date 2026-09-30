@@ -15,19 +15,56 @@ const HeroSection = ({ product }) => {
 
     return (
         <div className="py-2 relative bg-cover bg-cente bg-[#f2f3f8]">
-            <div className="container">
+            <div className="container-fluid">
                 <div className="bg-white px-4 mt-4 rounded-xl">
                     <div>
-                        <div className="grid lg:grid-cols-12 gap-4">
-                            <Link href={'/products'} className="lg:col-span-2">
-                                <Image className="w-full h-auto my-4 rounded-lg" src={'/img/17.jpg'} width={500} height={500} alt="Banner" title="Banner" />
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                            {/* Left Image */}
+                            <Link href="/products" className="hidden lg:block lg:col-span-2">
+                                <Image
+                                    className="w-full h-auto my-4 rounded-lg"
+                                    src="/img/leftimage.webp"
+                                    width={500}
+                                    height={500}
+                                    alt="Realistic Design Dildo"
+                                    title="Realistic Design Dildo"
+                                />
                             </Link>
-                            <Link href={'/products'} className="lg:col-span-8">
-                                <Image className="w-full h-auto my-4 rounded-lg" src={'/img/18.jpg'} width={1000} height={500} alt="Banner" title="Banner" />
+
+                            {/* Main Banner */}
+                            <Link href="/products" className="col-span-1 lg:col-span-8">
+                                <Image
+                                    className="w-full h-auto my-4 rounded-lg"
+                                    src="/img/banner-2.png"
+                                    width={1000}
+                                    height={500}
+                                    alt="Banner"
+                                    title="Banner"
+                                />
                             </Link>
-                            <Link href={'/products'} className="lg:col-span-2">
-                                <Image className="w-full h-auto mt-4 rounded-lg" src={'/img/19.jpg'} width={500} height={500} alt="Banner" title="Banner" />
-                                <Image className="w-full h-auto my-4 rounded-lg" src={'/img/20.jpg'} width={500} height={500} alt="Banner" title="Banner" />
+
+                            {/* Right Images */}
+                            <Link
+                                href="/products"
+                                className="col-span-1 lg:col-span-2 flex flex-row lg:flex-col gap-4"
+                            >
+                                <Image
+                                    className="w-1/2 lg:w-full h-auto rounded-lg lg:mt-4"
+                                    src="/img/img1.webp"
+                                    width={500}
+                                    height={500}
+                                    alt="Banner"
+                                    title="Banner"
+                                />
+
+                                <Image
+                                    className="w-1/2 lg:w-full h-auto rounded-lg"
+                                    src="/img/banner-sm1.png"
+                                    width={500}
+                                    height={500}
+                                    alt="Banner"
+                                    title="Banner"
+                                />
                             </Link>
                         </div>
                     </div>
@@ -64,18 +101,6 @@ const HeroSection = ({ product }) => {
                                 >
                                     {product?.map((product, index) => (
                                         <SwiperSlide key={index}>
-                                            {/* <div className="py-4 block">
-                                        <div className="w-full relative">
-                                            <Link href={`/products/${product?.slug}`} title={product?.name} className="w-full">
-                                                <Image src={product?.img} height={200} width={200} className="w-full h-auto max-w-50 max-h-[130px] object-cover" title={product?.name} alt={product?.name} />
-                                            </Link>
-                                            <div className="absolute bottom-0 left-0 w-full flex justify-center gap-2.5 p-2 bg-white">
-                                                <FaRegEye />
-                                                <FaCartPlus />
-                                            </div>
-                                        </div>
-                                        <Link href={`/products/${product?.slug}`} title={product?.name} className="line-clamp-2 text-sm mt-1.5"  >{product?.name}</Link>
-                                    </div> */}
                                             <ProductCardSmall product={product} />
                                         </SwiperSlide>
                                     ))}

@@ -1,7 +1,7 @@
 import Benifits from "./components/home/Benifits";
 import GallerySlider from "./components/home/GallerySlider";
 import HeroSection from "./components/home/HeroSection";
-import ProductGrid from "./components/products/ProductGrid";
+import Products from "./components/home/Products";
 import { getProducts } from "./lib/common";
 
 export default async function HomePage() {
@@ -10,9 +10,7 @@ export default async function HomePage() {
     <>
       <HeroSection product={product} />
       <Benifits />
-      <div className="container py-16">
-        <ProductGrid products={product} />
-      </div>
+      <Products products={product} />
       <GallerySlider />
     </>
   );

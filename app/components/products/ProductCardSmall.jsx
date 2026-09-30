@@ -46,11 +46,11 @@ const ProductCardSmall = ({ product }) => {
         <div className="py-4 block group overflow-hidden rounded-lg">
             <div className="w-full relative overflow-hidden">
                 <Link href={`/products/${product?.slug}`} title={product?.name} className="w-full relative">
-                    <Image src={product?.img} height={200} width={200} className="w-full h-auto min-h-30 max-w-50 rounded-lg max-h-[130px] object-cover" title={product?.name} alt={product?.name} />
+                    <Image src={product?.img} height={200} width={200} className="w-full h-auto lg:min-h-32 max-w-50 rounded-lg max-h-[130px] object-cover" title={product?.name} alt={product?.name} />
 
                     {discountPercentage >
                         0 && (
-                            <span className="absolute left-1.5 top-1.5 bg-black px-1 py-0.5 text-[8px] text-white">
+                            <span className="absolute left-1.5 top-1.5 bg-black rounded px-1 py-0.5 text-[8px] text-white">
                                 -
                                 {
                                     discountPercentage
