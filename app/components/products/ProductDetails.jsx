@@ -14,6 +14,7 @@ import { useCart } from "@/app/context/CartContext";
 import ProductQuantity from "./ProductQuantity";
 import { getImageUrl } from "@/app/lib/imageUrl";
 import ProductImages from "./ProductImages";
+import { Parser } from "html-to-react";
 
 export default function ProductDetails({
   product,
@@ -265,7 +266,7 @@ export default function ProductDetails({
 
           {product.description && (
             <div className="mt-4 text-sm leading-6 text-gray-600">
-              {product.description}
+              {Parser().parse(product.description)}
             </div>
           )}
 

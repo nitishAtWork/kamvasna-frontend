@@ -1,5 +1,5 @@
-"use client";
-
+import { serverFetch } from "@/app/hooks/serverFetch";
+import { Parser } from "html-to-react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -13,7 +13,9 @@ import {
     FiStar,
 } from "react-icons/fi";
 
-const page = () => {
+const page = async () => {
+    const data = await serverFetch("/pages/about")
+
     return (
         <main className="bg-white text-gray-900">
             {/* Hero */}
@@ -26,19 +28,17 @@ const page = () => {
                         <div className="max-w-3xl">
                             <span className="inline-flex items-center gap-2 rounded-full bg-red-50 px-4 py-2 text-sm font-semibold text-red-600">
                                 <FiHeart size={15} />
-                                About Kamvasna
+                                {data?.name}
                             </span>
 
                             <h1 className="mt-6 text-4xl font-black tracking-tight text-gray-950 sm:text-5xl lg:text-6xl">
-                                Better intimacy starts with
-                                <span className="text-red-600"> confidence.</span>
+                                {data?.shortDescription}
+                                {/* <span className="text-red-600"> confidence.</span> */}
                             </h1>
 
-                            <p className="mt-6 max-w-2xl text-base leading-8 text-gray-600 sm:text-lg">
-                                Kamvasna is a modern intimate wellness brand focused
-                                on helping adults explore intimacy with confidence,
-                                comfort, safety, and complete privacy.
-                            </p>
+                            <div className="mt-6 max-w-2xl text-base leading-8 text-gray-600 sm:text-lg">
+                                {Parser().parse(data?.description)}
+                            </div>
 
                             <div className="mt-8 flex flex-wrap gap-4">
                                 <Link
@@ -57,7 +57,7 @@ const page = () => {
                                 </Link>
                             </div>
                         </div>
-                        <Image src={'/img/about.png'} width={800} height={800} className="max-w-full rounded-2xl lg:mt-0 mt-8 h-auto" alt="About Kamvasna" title="About Kamvasna" />
+                        <Image src={data?.img} width={800} height={800} className="max-w-full rounded-2xl lg:mt-0 mt-8 h-auto" alt={data?.shortDescription} title={data?.shortDescription} />
                     </div>
                 </div>
             </section>
