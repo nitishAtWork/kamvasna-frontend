@@ -4,15 +4,22 @@ import {
     useEffect,
     useState,
 } from "react";
+import ReviewForm from "@/app/components/reviews/ReviewForm";
+import ReviewList from "@/app/components/reviews/ReviewList";
+import { useAuth } from "@/app/context/AuthContext";
 
 import ProductDetails from "@/app/components/products/ProductDetails";
 import ProductCardSkeleton from "@/app/components/products/ProductCardSkeleton";
 
 import { productApi } from "@/app/lib/product";
+import Link from "next/link";
+import RelatedProduct from "@/app/components/products/RelatedProduct";
 
 export default function ProductPage({
     params,
 }) {
+    const { user, logout } = useAuth();
+
     const [product, setProduct] =
         useState(null);
 
@@ -21,6 +28,12 @@ export default function ProductPage({
 
     const [error, setError] =
         useState("");
+
+    const [showReviewForm, setShowReviewForm] =
+        useState(false);
+
+    const [reviewRefreshKey, setReviewRefreshKey] =
+        useState(0);
 
     useEffect(() => {
         const loadProduct =
@@ -111,8 +124,93 @@ export default function ProductPage({
     }
 
     return (
-        <ProductDetails
-            product={product}
-        />
+        <>
+            <ProductDetails
+                product={product}
+            />
+
+            <RelatedProduct />
+            
+            <section className="my-12">
+                <div className="container">
+                    <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <p className="text-sm font-semibold uppercase tracking-wider text-red-600">
+                                Customer Reviews
+                            </p>
+
+                            <p className="mt-1 text-2xl font-bold text-black">
+                                What customers say
+                            </p>
+
+                            <p className="mt-1 text-sm text-gray-500">
+                                Real experiences from customers.
+                            </p>
+                        </div>
+
+                        {
+                            user
+                                ?
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setShowReviewForm(
+                                            true
+                                        )
+                                    }
+                                    className="inline-flex items-center justify-center rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-600"
+                                >
+                                    Write a Review
+                                </button>
+                                :
+                                <Link
+                                    href={"/login"}
+                                    type="button"
+                                    onClick={() =>
+                                        setShowReviewForm(
+                                            true
+                                        )
+                                    }
+                                    className="inline-flex items-center justify-center rounded-xl bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-600"
+                                >
+                                    Write a Review
+                                </Link>
+                        }
+
+
+                    </div>
+
+                    {showReviewForm && (
+                        <div className="mb-8">
+                            <ReviewForm
+                                productId={product._id}
+                                onCancel={() =>
+                                    setShowReviewForm(
+                                        false
+                                    )
+                                }
+                                onSuccess={() => {
+                                    setShowReviewForm(
+                                        false
+                                    );
+
+                                    setReviewRefreshKey(
+                                        (value) =>
+                                            value + 1
+                                    );
+                                }}
+                            />
+                        </div>
+                    )}
+
+                    <ReviewList
+                        productId={product._id}
+                        refreshKey={
+                            reviewRefreshKey
+                        }
+                    />
+                </div>
+            </section>
+        </>
     );
 }

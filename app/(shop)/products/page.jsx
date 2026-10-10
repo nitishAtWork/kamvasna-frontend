@@ -57,12 +57,12 @@ export default function ProductsPage() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-7xl px-5 py-8 lg:px-8 lg:py-12">
+    <main className="container py-8 lg:py-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+        <p className="text-3xl font-bold tracking-tight text-gray-900">
           Products
-        </h1>
+        </p>
 
         <p className="mt-2 text-sm text-gray-500">
           Browse our collection.

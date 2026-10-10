@@ -1,244 +1,183 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-const initialAddress = {
-    fullName: "",
-    phone: "",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    country: "India",
-};
-
 export default function AddressForm({
     value,
     onChange,
+    onSubmit,
+    saving = false,
 }) {
-    const [form, setForm] =
-        useState(
-            value || initialAddress
-        );
-
-    const [errors, setErrors] =
-        useState({});
-
-    useEffect(() => {
-        if (value) {
-            setForm(value);
-        }
-    }, [value]);
-
-    const handleChange =
-        (event) => {
-            const {
-                name,
-                value,
-            } = event.target;
-
-            const nextForm = {
-                ...form,
-                [name]: value,
-            };
-
-            setForm(nextForm);
-
-            onChange?.(nextForm);
-
-            if (errors[name]) {
-                setErrors(
-                    (current) => ({
-                        ...current,
-                        [name]: "",
-                    })
-                );
-            }
-        };
-
-    const validate = () => {
-        const nextErrors = {};
-
-        if (!form.fullName.trim()) {
-            nextErrors.fullName =
-                "Full name is required.";
-        }
-
-        if (!form.phone.trim()) {
-            nextErrors.phone =
-                "Phone number is required.";
-        }
-
-        if (
-            !form.addressLine1.trim()
-        ) {
-            nextErrors.addressLine1 =
-                "Address is required.";
-        }
-
-        if (!form.city.trim()) {
-            nextErrors.city =
-                "City is required.";
-        }
-
-        if (!form.state.trim()) {
-            nextErrors.state =
-                "State is required.";
-        }
-
-        if (!form.postalCode.trim()) {
-            nextErrors.postalCode =
-                "Postal code is required.";
-        }
-
-        setErrors(nextErrors);
-
-        return (
-            Object.keys(nextErrors)
-                .length === 0
-        );
+    const form = value || {
+        label: "HOME",
+        fullName: "",
+        phone: "",
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        state: "",
+        postalCode: "",
+        country: "India",
+        isDefault: false,
     };
 
-    /*
-     * Expose validation through
-     * the browser event for now.
-     */
-    useEffect(() => {
-        const handler = () => {
-            validate();
-        };
-
-        window.addEventListener(
-            "checkout:validate-address",
-            handler
-        );
-
-        return () => {
-            window.removeEventListener(
-                "checkout:validate-address",
-                handler
-            );
-        };
-    });
-
     return (
-        <section className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
-            <div>
-                <h2 className="text-lg font-bold text-gray-900">
-                    Delivery Address
-                </h2>
+        <form onSubmit={onSubmit}>
+            <section className="rounded-xl border border-gray-200 bg-white p-5 sm:p-6">
+                <div>
+                    <h2 className="text-lg font-bold text-gray-900">
+                        Delivery Address
+                    </h2>
 
-                <p className="mt-1 text-sm text-gray-500">
-                    Enter the address where your
-                    order should be delivered.
-                </p>
-            </div>
+                    <p className="mt-1 text-sm text-gray-500">
+                        Enter the address where your
+                        order should be delivered.
+                    </p>
+                </div>
 
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                <Field
-                    label="Full Name"
-                    name="fullName"
-                    value={form.fullName}
-                    onChange={
-                        handleChange
-                    }
-                    error={
-                        errors.fullName
-                    }
-                    required
-                />
+                <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                    {/* Address Label */}
+                    <div>
+                        <label
+                            htmlFor="label"
+                            className="mb-2 block text-sm font-medium text-gray-700"
+                        >
+                            Address Type
+                        </label>
 
-                <Field
-                    label="Phone"
-                    name="phone"
-                    type="tel"
-                    value={form.phone}
-                    onChange={
-                        handleChange
-                    }
-                    error={errors.phone}
-                    required
-                />
+                        <select
+                            id="label"
+                            name="label"
+                            value={form.label || "HOME"}
+                            onChange={onChange}
+                            className="h-11 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 outline-none transition focus:border-black"
+                        >
+                            <option value="HOME">
+                                Home
+                            </option>
 
-                <div className="sm:col-span-2">
+                            <option value="WORK">
+                                Work
+                            </option>
+
+                            <option value="OTHER">
+                                Other
+                            </option>
+                        </select>
+                    </div>
+
+                    {/* Full Name */}
                     <Field
-                        label="Address Line 1"
-                        name="addressLine1"
-                        value={
-                            form.addressLine1
-                        }
-                        onChange={
-                            handleChange
-                        }
-                        error={
-                            errors.addressLine1
-                        }
+                        label="Full Name"
+                        name="fullName"
+                        value={form.fullName}
+                        onChange={onChange}
                         required
                     />
-                </div>
 
-                <div className="sm:col-span-2">
+                    {/* Phone */}
                     <Field
-                        label="Address Line 2"
-                        name="addressLine2"
-                        value={
-                            form.addressLine2
-                        }
-                        onChange={
-                            handleChange
-                        }
+                        label="Phone"
+                        name="phone"
+                        type="tel"
+                        value={form.phone}
+                        onChange={onChange}
+                        required
                     />
+
+                    {/* Address Line 1 */}
+                    <div className="sm:col-span-2">
+                        <Field
+                            label="Address Line 1"
+                            name="addressLine1"
+                            value={form.addressLine1}
+                            onChange={onChange}
+                            required
+                        />
+                    </div>
+
+                    {/* Address Line 2 */}
+                    <div className="sm:col-span-2">
+                        <Field
+                            label="Address Line 2"
+                            name="addressLine2"
+                            value={form.addressLine2}
+                            onChange={onChange}
+                        />
+                    </div>
+
+                    {/* City */}
+                    <Field
+                        label="City"
+                        name="city"
+                        value={form.city}
+                        onChange={onChange}
+                        required
+                    />
+
+                    {/* State */}
+                    <Field
+                        label="State"
+                        name="state"
+                        value={form.state}
+                        onChange={onChange}
+                        required
+                    />
+
+                    {/* Postal Code */}
+                    <Field
+                        label="Postal Code"
+                        name="postalCode"
+                        value={form.postalCode}
+                        onChange={onChange}
+                        required
+                    />
+
+                    {/* Country */}
+                    <Field
+                        label="Country"
+                        name="country"
+                        value={form.country}
+                        onChange={onChange}
+                        disabled
+                    />
+
+                    {/* Default Address */}
+                    <div className="sm:col-span-2">
+                        <label className="flex cursor-pointer items-center gap-3">
+                            <input
+                                type="checkbox"
+                                name="isDefault"
+                                checked={
+                                    Boolean(
+                                        form.isDefault
+                                    )
+                                }
+                                onChange={onChange}
+                                className="h-4 w-4 rounded border-gray-300 accent-black"
+                            />
+
+                            <span className="text-sm text-gray-700">
+                                Make this my default address
+                            </span>
+                        </label>
+                    </div>
                 </div>
 
-                <Field
-                    label="City"
-                    name="city"
-                    value={form.city}
-                    onChange={
-                        handleChange
-                    }
-                    error={errors.city}
-                    required
-                />
-
-                <Field
-                    label="State"
-                    name="state"
-                    value={form.state}
-                    onChange={
-                        handleChange
-                    }
-                    error={errors.state}
-                    required
-                />
-
-                <Field
-                    label="Postal Code"
-                    name="postalCode"
-                    value={
-                        form.postalCode
-                    }
-                    onChange={
-                        handleChange
-                    }
-                    error={
-                        errors.postalCode
-                    }
-                    required
-                />
-
-                <Field
-                    label="Country"
-                    name="country"
-                    value={form.country}
-                    onChange={
-                        handleChange
-                    }
-                    disabled
-                />
-            </div>
-        </section>
+                {/* Save Button */}
+                {onSubmit && (
+                    <div className="mt-6">
+                        <button
+                            type="submit"
+                            disabled={saving}
+                            className="rounded-lg bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            {saving
+                                ? "Saving..."
+                                : "Save Address"}
+                        </button>
+                    </div>
+                )}
+            </section>
+        </form>
     );
 }
 
@@ -248,7 +187,6 @@ function Field({
     type = "text",
     value,
     onChange,
-    error,
     required = false,
     disabled = false,
 }) {
@@ -271,21 +209,12 @@ function Field({
                 id={name}
                 name={name}
                 type={type}
-                value={value}
+                value={value ?? ""}
                 onChange={onChange}
                 disabled={disabled}
-                className={`h-11 w-full rounded-lg border px-3 text-sm text-gray-900 outline-none transition ${
-                    error
-                        ? "border-red-400 focus:border-red-500"
-                        : "border-gray-300 focus:border-black"
-                } disabled:bg-gray-100`}
+                required={required}
+                className="h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 outline-none transition focus:border-black disabled:bg-gray-100"
             />
-
-            {error && (
-                <p className="mt-1 text-xs text-red-500">
-                    {error}
-                </p>
-            )}
         </div>
     );
 }

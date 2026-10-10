@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { getImageUrl } from "@/app/lib/imageUrl";
+import Link from "next/link";
 
 export default function CheckoutSummary({
     items = [],
@@ -10,8 +11,17 @@ export default function CheckoutSummary({
     placingOrder,
     onPlaceOrder,
 }) {
-    const canPlaceOrder =
-        Boolean(address);
+    const canPlaceOrder = Boolean(address);
+
+    const deliveryCharge =
+        Number(totals?.deliveryCharge) || 0;
+
+    const subtotal =
+        Number(totals?.subtotal) || 0;
+
+    const total =
+        Number(totals?.total) ||
+        subtotal + deliveryCharge;
 
     return (
         <aside className="h-fit rounded-xl border border-gray-200 bg-white">
@@ -22,48 +32,42 @@ export default function CheckoutSummary({
             </div>
 
             <div className="divide-y divide-gray-100">
-                {items.map(
-                    (item) => {
-                        const product =
-                            item.product;
+                {items.map((item) => {
+                    const product = item.product;
 
-                        return (
-                            <div
-                                key={
-                                    product._id
-                                }
-                                className="flex gap-3 p-5"
-                            >
-                                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                                    {product.img && (
-                                        <Image
-                                            src={getImageUrl(
-                                                product.img
-                                            )}
-                                            alt={
-                                                product.name
-                                            }
-                                            fill
-                                            sizes="64px"
-                                            className="object-cover"
-                                        />
-                                    )}
-                                </div>
-
-                                <div className="min-w-0 flex-1">
-                                    <p className="line-clamp-2 text-sm font-medium text-gray-900">
-                                        {
+                    return (
+                        <Link
+                         href={`/products/${product.slug}`}
+                            key={product._id}
+                            className="flex gap-3 p-5"
+                        >
+                            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                                {product.img && (
+                                    <Image
+                                        src={getImageUrl(
+                                            product.img
+                                        )}
+                                        alt={
                                             product.name
                                         }
-                                    </p>
+                                        fill
+                                        sizes="64px"
+                                        className="object-cover"
+                                    />
+                                )}
+                            </div>
 
-                                    <p className="mt-1 text-xs text-gray-500">
-                                        Qty:{" "}
-                                        {
-                                            item.quantity
-                                        }
-                                    </p>
+                            <div className="min-w-0 flex-1">
+                                <p className="line-clamp-2 text-sm font-medium text-gray-900">
+                                    {product.name}
+                                </p>
 
+                                <p className="mt-1 text-xs text-gray-500">
+                                    Qty:{" "}
+                                    {item.quantity}
+                                </p>
+
+                                <div className="flex gap-2 items-baseline">
                                     <p className="mt-1 text-sm font-semibold text-gray-900">
                                         ₹
                                         {(
@@ -73,14 +77,24 @@ export default function CheckoutSummary({
                                             "en-IN"
                                         )}
                                     </p>
+                                    {
+                                        product.deliveryCharge > 0 && (
+                                            <p className="text-[10px] text-slate-500">+ ₹{(
+                                                product.deliveryCharge
+                                            ).toLocaleString(
+                                                "en-IN"
+                                            )} Delivery Fee</p>
+                                        )
+                                    }
                                 </div>
                             </div>
-                        );
-                    }
-                )}
+                        </Link>
+                    );
+                })}
             </div>
 
             <div className="space-y-3 border-t border-gray-200 p-5">
+                {/* Subtotal */}
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-500">
                         Subtotal
@@ -88,25 +102,28 @@ export default function CheckoutSummary({
 
                     <span className="font-medium text-gray-900">
                         ₹
-                        {(
-                            totals.subtotal ||
-                            0
-                        ).toLocaleString(
+                        {subtotal.toLocaleString(
                             "en-IN"
                         )}
                     </span>
                 </div>
 
+                {/* Delivery */}
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-500">
-                        Shipping
+                        Delivery
                     </span>
 
                     <span className="font-medium text-gray-900">
-                        Free
+                        {deliveryCharge > 0
+                            ? `₹${deliveryCharge.toLocaleString(
+                                "en-IN"
+                            )}`
+                            : "Free"}
                     </span>
                 </div>
 
+                {/* Total */}
                 <div className="border-t border-gray-200 pt-3">
                     <div className="flex justify-between">
                         <span className="font-semibold text-gray-900">
@@ -115,21 +132,17 @@ export default function CheckoutSummary({
 
                         <span className="text-lg font-bold text-gray-900">
                             ₹
-                            {(
-                                totals.total ||
-                                0
-                            ).toLocaleString(
+                            {total.toLocaleString(
                                 "en-IN"
                             )}
                         </span>
                     </div>
                 </div>
 
+                {/* Place Order */}
                 <button
                     type="button"
-                    onClick={
-                        onPlaceOrder
-                    }
+                    onClick={onPlaceOrder}
                     disabled={
                         !canPlaceOrder ||
                         placingOrder

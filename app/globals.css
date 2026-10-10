@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --color-1: #0d263a;
-  --color-2: #4480b3;
+  --color-1: #cf050d;
+  --color-2: #f13b41;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -197,8 +197,7 @@ h6,
 .clearfix ul{
     list-style: unset;
 }
-.clearfix,
-.about-content-side ul{
+.clearfix .about-content-side ul{
     padding-left: 28px;
 }
 .clearfix table,

@@ -8,6 +8,7 @@ import {
   FiShoppingCart,
 } from "react-icons/fi";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { useCart } from "@/app/context/CartContext";
 import ProductQuantity from "./ProductQuantity";
@@ -19,6 +20,7 @@ export default function ProductDetails({
 }) {
   const [quantity, setQuantity] =
     useState(1);
+  const router = useRouter();
 
   const {
     addToCart,
@@ -27,6 +29,24 @@ export default function ProductDetails({
 
   const isAdding =
     updatingProductId === product._id;
+
+  const handleBuyNow = async () => {
+    try {
+      const response = await addToCart(
+        product._id,
+        quantity
+      );
+
+      if (response) {
+        router.push("/checkout");
+      }
+    } catch (error) {
+      console.error(
+        "Failed to buy product:",
+        error
+      );
+    }
+  };
 
   const hasDiscount =
     product.compareAtPrice &&
@@ -83,7 +103,7 @@ export default function ProductDetails({
     };
 
   return (
-    <main className="mx-auto max-w-7xl px-5 py-8 lg:px-8 lg:py-12">
+    <main className="container py-8 lg:py-12">
       {/* Back */}
       <Link
         href="/products"
@@ -197,6 +217,43 @@ export default function ProductDetails({
             )}
           </div>
 
+          {/* Delivery Charge */}
+          <div>
+            <p className="mt-2 text-sm text-gray-500">
+              Delivery Charges: {product.deliveryCharge === 0 || product.deliveryCharge === null || product.deliveryCharge === undefined
+                ? <span className="font-medium text-green-700">Free</span>
+                : <b className="font-bold text-black">₹{product?.deliveryCharge.toLocaleString("en-IN")}</b>}
+            </p>
+            {/* delivery date approx 7 to 10 days */}
+            <p className="text-sm text-gray-500 mt-2">
+              Expected Delivery Date: {" "}
+              <b className="font-bold text-black">
+                {new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "long",
+                })}
+              </b>
+              {" "} to {" "}
+              <b className="font-bold text-black">
+                {new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "long",
+                })}
+              </b>
+            </p>
+          </div>
+
+          {/* Sizes */}
+          <div>
+            {product.size && (
+              <div className="mt-5">
+                <p className="mb-3 text-sm ">
+                  <span className="font-semibold text-gray-900">Sizes :</span> <span className="text-slate-400">{product.size}</span>
+                </p>
+              </div>
+            )}
+          </div>
+
           {/* Description */}
           {product.shortDescription && (
             <p className="mt-6 text-base leading-7 text-gray-600">
@@ -244,29 +301,48 @@ export default function ProductDetails({
           )}
 
           {/* Add to cart */}
-          <button
-            type="button"
-            onClick={
-              handleAddToCart
-            }
-            disabled={
-              isOutOfStock ||
-              isAdding
-            }
-            className="mt-6 flex h-13 w-full items-center justify-center gap-2 rounded-lg bg-black px-6 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
-          >
-            <FiShoppingCart
-              size={19}
-            />
-            {isOutOfStock
-              ? "Out of Stock"
-              : isAdding
-                ? "Adding..."
-                : `Add ${quantity} ${quantity === 1
-                  ? "Item"
-                  : "Items"
-                } to Cart`}
-          </button>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {/* Add to Cart */}
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={
+                isOutOfStock ||
+                isAdding
+              }
+              className="flex h-13 w-full items-center justify-center gap-2 rounded-lg border border-black bg-white px-6 text-sm font-semibold text-black transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-400"
+            >
+              <FiShoppingCart
+                size={19}
+              />
+
+              {isOutOfStock
+                ? "Out of Stock"
+                : isAdding
+                  ? "Adding..."
+                  : `Add ${quantity} ${quantity === 1
+                    ? "Item"
+                    : "Items"
+                  }`}
+            </button>
+
+            {/* Buy Now */}
+            <button
+              type="button"
+              onClick={handleBuyNow}
+              disabled={
+                isOutOfStock ||
+                isAdding
+              }
+              className="flex h-13 w-full items-center justify-center gap-2 rounded-lg bg-black px-6 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+            >
+              {isOutOfStock
+                ? "Out of Stock"
+                : isAdding
+                  ? "Processing..."
+                  : "Buy Now"}
+            </button>
+          </div>
 
           {/* SKU */}
           {product.sku && (

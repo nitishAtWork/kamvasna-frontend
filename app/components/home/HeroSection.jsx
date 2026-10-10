@@ -15,7 +15,7 @@ const HeroSection = ({ product }) => {
 
     return (
         <div className="py-2 relative bg-cover bg-cente bg-[#f2f3f8]">
-            <div className="container-fluid">
+            <div className="container">
                 <div className="bg-white px-4 mt-4 rounded-xl">
                     <div>
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
@@ -26,6 +26,7 @@ const HeroSection = ({ product }) => {
                                     src="/img/leftimage.webp"
                                     width={500}
                                     height={500}
+                                    loading="eager"
                                     alt="Realistic Design Dildo"
                                     title="Realistic Design Dildo"
                                 />
@@ -38,6 +39,7 @@ const HeroSection = ({ product }) => {
                                     src="/img/banner-2.png"
                                     width={1000}
                                     height={500}
+                                    loading="eager"
                                     alt="Banner"
                                     title="Banner"
                                 />
@@ -49,19 +51,21 @@ const HeroSection = ({ product }) => {
                                 className="col-span-1 lg:col-span-2 flex flex-row lg:flex-col gap-4"
                             >
                                 <Image
-                                    className="w-1/2 lg:w-full h-auto rounded-lg lg:mt-4"
+                                    className="w-[calc(50%-8px)] lg:w-full h-auto rounded-lg lg:mt-4"
                                     src="/img/img1.webp"
                                     width={500}
                                     height={500}
+                                    loading="eager"
                                     alt="Banner"
                                     title="Banner"
                                 />
 
                                 <Image
-                                    className="w-1/2 lg:w-full h-auto rounded-lg"
+                                    className="w-[calc(50%-8px)] lg:w-full h-auto rounded-lg"
                                     src="/img/banner-sm1.png"
                                     width={500}
                                     height={500}
+                                    loading="eager"
                                     alt="Banner"
                                     title="Banner"
                                 />

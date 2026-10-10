@@ -59,7 +59,7 @@ const GallerySlider = () => {
                                 320: { slidesPerView: 2 },
                                 675: { slidesPerView: 2 },
                                 991: { slidesPerView: 3 },
-                                1224: { slidesPerView: 4 },
+                                1224: { slidesPerView: 3 },
                             }}
                             navigation={{
                                 nextEl: ".service-next",
@@ -76,7 +76,7 @@ const GallerySlider = () => {
                                             src={product?.img}
                                             alt={product?.name || "Service"}
                                             title={product?.name || "Service"}
-                                            className=" h-full grayscale-75 hover:grayscale-0 w-full object-cover transition-transform duration-700 hover:scale-105 lg:h-70"
+                                            className=" h-full grayscale-75 hover:grayscale-0 w-full object-cover transition-transform duration-700 hover:scale-105 lg:h-75"
                                         />
                                         <span className="absolute left-0 bottom-0 block px-6 py-2 bg-gray-50/70 rounded-tr-lg">{product?.name}</span>
                                     </Link>

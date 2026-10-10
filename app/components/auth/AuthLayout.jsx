@@ -10,17 +10,17 @@ export default function AuthLayout({
     <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-10">
       <div className="w-full max-w-md">
         <div className="rounded-2xl border bg-white p-6 shadow-sm sm:p-8">
-          <Link
+          {/* <Link
             href="/"
             className="block text-center text-2xl font-bold"
           >
             Store
-          </Link>
+          </Link> */}
 
           <div className="mt-8 text-center">
-            <h1 className="text-2xl font-bold">
+            <p className="text-2xl font-bold">
               {title}
-            </h1>
+            </p>
 
             {description && (
               <p className="mt-2 text-sm text-gray-500">

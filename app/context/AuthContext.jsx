@@ -4,36 +4,29 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
 import { authApi } from "@/app/lib/auth";
+
 import {
   setAccessToken,
   clearAccessToken,
 } from "@/app/lib/token";
 
-const AuthContext =
-  createContext(null);
+const AuthContext = createContext(null);
 
-export function AuthProvider({
-  children,
-}) {
-  const [user, setUser] =
-    useState(null);
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [loading, setLoading] =
-    useState(true);
+  const authInitialized = useRef(false);
 
-  const isAuthenticated =
-    Boolean(user);
+  const isAuthenticated = Boolean(user);
 
   async function initializeAuth() {
     try {
-      /*
-       * The refresh token is in the
-       * HTTP-only cookie.
-       */
       const response =
         await authApi.refresh();
 
@@ -58,7 +51,14 @@ export function AuthProvider({
       setUser(
         currentUser || null
       );
-    } catch {
+    } catch (error) {
+      /*
+       * No refresh token simply means
+       * the user is not logged in.
+       *
+       * Do not treat this as an
+       * application error.
+       */
       clearAccessToken();
       setUser(null);
     } finally {
@@ -100,6 +100,40 @@ export function AuthProvider({
     return response;
   }
 
+  async function loginWithOTP(data) {
+    const response =
+      await authApi.verifyLoginOTP(
+        data
+      );
+
+    const token =
+      response.data?.accessToken;
+
+    if (!token) {
+      throw new Error(
+        "OTP login succeeded but no access token was returned."
+      );
+    }
+
+    setAccessToken(token);
+
+    let currentUser =
+      response.data?.user;
+
+    if (!currentUser) {
+      const userResponse =
+        await authApi.me();
+
+      currentUser =
+        userResponse.data?.user ||
+        userResponse.data;
+    }
+
+    setUser(currentUser);
+
+    return response;
+  }
+
   async function logout() {
     try {
       await authApi.logout();
@@ -115,6 +149,12 @@ export function AuthProvider({
   }
 
   useEffect(() => {
+    if (authInitialized.current) {
+      return;
+    }
+
+    authInitialized.current = true;
+
     initializeAuth();
   }, []);
 
@@ -125,6 +165,7 @@ export function AuthProvider({
         loading,
         isAuthenticated,
         login,
+        loginWithOTP,
         logout,
         setUser,
       }}

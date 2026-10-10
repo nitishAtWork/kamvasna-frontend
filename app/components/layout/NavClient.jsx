@@ -21,6 +21,7 @@ import {
 import { useCart } from "@/app/context/CartContext";
 import { useAuth } from "@/app/context/AuthContext";
 import Image from "next/image";
+import SearchBar from "../products/SearchBar";
 
 export default function NavClient({ siteInfo, product = [] }) {
 
@@ -57,17 +58,12 @@ export default function NavClient({ siteInfo, product = [] }) {
     }, []);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [mobileProductOpen, setMobileProductOpen] = useState(false);
-    const [search, setSearch] = useState("");
     const [scroll, setScroll] = useState(false);
 
     const { totals } = useCart();
     const { user, logout } = useAuth();
 
     const itemCount = totals?.itemCount || 0;
-
-    const filteredProducts = product.filter((prod) =>
-        prod?.name?.toLowerCase().includes(search.toLowerCase())
-    );
 
     const handleLogout = async () => {
         try {
@@ -80,7 +76,7 @@ export default function NavClient({ siteInfo, product = [] }) {
     const closeMobileMenu = () => {
         setMobileOpen(false);
         setMobileProductOpen(false);
-        setSearch("");
+        // setSearch("");
     };
 
     useEffect(() => {
@@ -113,7 +109,7 @@ export default function NavClient({ siteInfo, product = [] }) {
             {/* TOP OFFER BAR */}
             {/* ================================================= */}
 
-            <div className={`relative overflow-hidden border-b border-white/10 ${scroll?"hidden":"block"}`}>
+            <div className={`relative overflow-hidden border-b border-white/10 ${scroll ? "hidden" : "block"}`}>
                 <Image width={2000} height={200} className="w-full md:block hidden h-auto absolute left-0 top-0 inset-0" src="/img/1wt.webp" alt="Banner" title="Banner" />
                 <div className={`mx-auto h-11 container items-center justify-center flex relative z-[4]`}>
 
@@ -265,8 +261,8 @@ export default function NavClient({ siteInfo, product = [] }) {
                                     {/* Product list */}
                                     <div className="max-h-[380px] overflow-y-auto p-2">
 
-                                        {filteredProducts.length > 0 ? (
-                                            filteredProducts.map((prod) => (
+                                        {product.length > 0 ? (
+                                            product.map((prod) => (
 
                                                 <Link
                                                     key={
@@ -403,28 +399,8 @@ export default function NavClient({ siteInfo, product = [] }) {
                     {/* ================================================= */}
 
                     <div className="ml-auto hidden w-full max-w-[320px] lg:block">
-                        <div className="group relative">
-
-                            <FiSearch
-                                size={17}
-                                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 transition group-focus-within:text-white/70"
-                            />
-
-                            <input
-                                type="text"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Search products..."
-                                className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.055] pl-11 pr-4 text-sm text-white outline-none placeholder:text-white/30 transition-all duration-300 hover:border-white/20 hover:bg-white/[0.07] focus:border-white/25 focus:bg-white/[0.08] focus:ring-4 focus:ring-white/[0.03]"
-                            />
-
-                            <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-white/10 bg-white/[0.05] px-1.5 py-0.5 text-[10px] text-white/25 xl:block">
-                                ⌘ K
-                            </kbd>
-
-                        </div>
+                        <SearchBar products={product} />
                     </div>
-
 
                     {/* ================================================= */}
                     {/* RIGHT ACTIONS */}
@@ -520,22 +496,10 @@ export default function NavClient({ siteInfo, product = [] }) {
 
                             {/* Mobile Search */}
                             <div className="relative mb-4">
-
-                                <FiSearch
-                                    size={17}
-                                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30"
+                                <SearchBar
+                                    products={product}
+                                    mobile
                                 />
-
-                                <input
-                                    type="text"
-                                    value={search}
-                                    onChange={(e) =>
-                                        setSearch(e.target.value)
-                                    }
-                                    placeholder="Search products..."
-                                    className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.05] pl-10 pr-4 text-sm text-white outline-none placeholder:text-white/30 focus:border-white/25"
-                                />
-
                             </div>
 
 
@@ -574,9 +538,9 @@ export default function NavClient({ siteInfo, product = [] }) {
 
                                     <div className="border-b border-white/10 py-2">
 
-                                        {filteredProducts.length > 0 ? (
+                                        {product.length > 0 ? (
 
-                                            filteredProducts.map((prod) => (
+                                            product.map((prod) => (
 
                                                 <Link
                                                     key={

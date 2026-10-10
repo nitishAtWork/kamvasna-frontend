@@ -25,6 +25,20 @@ export const authApi = {
     });
   },
 
+  sendLoginOTP(data) {
+    return apiRequest("/auth/login/send-otp", {
+      method: "POST",
+      body: data,
+    });
+  },
+
+  verifyLoginOTP(data) {
+    return apiRequest("/auth/login/verify-otp", {
+      method: "POST",
+      body: data,
+    });
+  },
+
   refresh() {
     return apiRequest(
       "/auth/refresh",
@@ -45,9 +59,26 @@ export const authApi = {
     });
   },
 
+  changePassword(data) {
+    return apiRequest("/auth/change-password", {
+      method: "POST",
+      body: data,
+    });
+  },
+
   forgotPassword(data) {
     return apiRequest(
       "/auth/forgot-password",
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+  },
+
+  verifyResetOTP(data) {
+    return apiRequest(
+      "/auth/verify-reset-otp",
       {
         method: "POST",
         body: data,

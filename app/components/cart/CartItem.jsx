@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { FiTrash2 } from "react-icons/fi";
+import Link from "next/link";
 
 import CartQuantity from "./CartQuantity";
 import { useCart } from "@/app/context/CartContext";
@@ -60,7 +61,7 @@ export default function CartItem({
     return (
         <div className="flex gap-4 border-b border-gray-200 py-5">
             {/* Product image */}
-            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+            <Link href={`/products/${product.slug}`} className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                 {product.img ? (
                     <Image
                         src={getImageUrl(
@@ -77,15 +78,15 @@ export default function CartItem({
                         No Image
                     </div>
                 )}
-            </div>
+            </Link>
 
             {/* Product information */}
             <div className="flex min-w-0 flex-1 flex-col">
                 <div className="flex justify-between gap-4">
                     <div>
-                        <h3 className="line-clamp-2 text-sm font-semibold text-gray-900">
+                        <Link href={`/products/${product.slug}`} className="line-clamp-2 text-sm font-semibold text-gray-900">
                             {product.name}
-                        </h3>
+                        </Link>
 
                         {product.brand && (
                             <p className="mt-1 text-xs text-gray-500">
