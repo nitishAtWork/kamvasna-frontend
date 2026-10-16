@@ -415,19 +415,19 @@ export default function NavClient({ siteInfo, product = [] }) {
 
                                 <Link
                                     href="/account"
-                                    className="flex h-10 items-center gap-2 rounded-full px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.06] hover:text-white"
+                                    className="flex h-10 items-center gap-2 rounded-full px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.1] bg-white/[0.06] hover:text-white"
                                 >
                                     <FiUser size={18} />
                                     <span className="md:block hidden">Account</span>
                                 </Link>
 
-                                <button
+                                {/* <button
                                     type="button"
                                     onClick={handleLogout}
                                     className="text-sm text-white/65 transition hover:text-red-400 md:block hidden"
                                 >
                                     Logout
-                                </button>
+                                </button> */}
 
                             </div>
 
@@ -435,7 +435,7 @@ export default function NavClient({ siteInfo, product = [] }) {
 
                             <Link
                                 href="/login"
-                                className="flex h-10 items-center gap-2 rounded-full px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.06] hover:text-white "
+                                className="flex h-10 items-center gap-2 rounded-full px-3 text-sm font-medium text-white/85 transition hover:bg-white/[0.1] bg-white/[0.06] hover:text-white "
                             >
                                 <FiUser size={18} />
                                 Login
@@ -447,7 +447,7 @@ export default function NavClient({ siteInfo, product = [] }) {
                         {/* Cart */}
                         <Link
                             href="/cart"
-                            className="relative flex h-10 w-10 items-center justify-center rounded-full text-white/85 transition hover:bg-white/[0.07] hover:text-white"
+                            className="relative flex h-10 w-10 items-center justify-center rounded-full text-white/85 transition hover:bg-white/[0.1] bg-white/[0.06] hover:text-white"
                             aria-label="Shopping cart"
                         >
 

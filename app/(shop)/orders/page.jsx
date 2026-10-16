@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
     FiPackage,
     FiShoppingBag,
@@ -18,13 +18,31 @@ import {
 
 import { orderApi } from "@/app/lib/orders";
 import { getImageUrl } from "@/app/lib/imageUrl";
+import { useAuth } from "@/app/context/AuthContext";
 
 const Page = () => {
-    const router = useRouter();
-
+    
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const {
+        user,
+        isAuthenticated,
+        loading: authLoading,
+    } = useAuth();
+
+    useEffect(() => {
+        if (authLoading) return;
+
+        if (!isAuthenticated || !user) {
+            const redirectUrl = encodeURIComponent(pathname || "/");
+            router.replace(`/login?redirect=${redirectUrl}`);
+        }
+    }, [authLoading, isAuthenticated, user, pathname, router]);
 
     useEffect(() => {
         fetchOrders();
@@ -58,8 +76,8 @@ const Page = () => {
 
             setError(
                 error?.response?.data?.message ||
-                    error?.message ||
-                    "Unable to load your orders."
+                error?.message ||
+                "Unable to load your orders."
             );
         } finally {
             setLoading(false);
@@ -448,13 +466,13 @@ const Page = () => {
 
                                                         {order.items?.length >
                                                             4 && (
-                                                            <div className="flex h-16 w-16 items-center justify-center rounded-xl border-2 border-white bg-black text-xs font-bold text-white shadow-sm">
-                                                                +
-                                                                {order.items
-                                                                    .length -
-                                                                    4}
-                                                            </div>
-                                                        )}
+                                                                <div className="flex h-16 w-16 items-center justify-center rounded-xl border-2 border-white bg-black text-xs font-bold text-white shadow-sm">
+                                                                    +
+                                                                    {order.items
+                                                                        .length -
+                                                                        4}
+                                                                </div>
+                                                            )}
                                                     </div>
 
                                                     <div className="ml-5 min-w-0">
@@ -466,20 +484,20 @@ const Page = () => {
 
                                                         {order.items?.length >
                                                             1 && (
-                                                            <p className="mt-1 text-xs text-gray-500">
-                                                                +{" "}
-                                                                {order.items
-                                                                    .length -
-                                                                    1}{" "}
-                                                                more item
-                                                                {order.items
-                                                                    .length -
-                                                                    1 >
-                                                                1
-                                                                    ? "s"
-                                                                    : ""}
-                                                            </p>
-                                                        )}
+                                                                <p className="mt-1 text-xs text-gray-500">
+                                                                    +{" "}
+                                                                    {order.items
+                                                                        .length -
+                                                                        1}{" "}
+                                                                    more item
+                                                                    {order.items
+                                                                        .length -
+                                                                        1 >
+                                                                        1
+                                                                        ? "s"
+                                                                        : ""}
+                                                                </p>
+                                                            )}
 
                                                         <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-gray-500">
                                                             <span className="flex items-center gap-1">
@@ -531,8 +549,8 @@ const Page = () => {
                                                 {order.shippingAmount === 0
                                                     ? "Free Shipping"
                                                     : `Shipping ₹${formatPrice(
-                                                          order.shippingAmount
-                                                      )}`}
+                                                        order.shippingAmount
+                                                    )}`}
                                             </span>
                                         </div>
                                     </article>

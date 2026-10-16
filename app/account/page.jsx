@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
     FiUser,
     FiMail,
@@ -20,20 +20,25 @@ import { MdOutlineReviews } from "react-icons/md";
 import { useAuth } from "@/app/context/AuthContext";
 
 export default function AccountPage() {
+
     const router = useRouter();
+    const pathname = usePathname();
 
     const {
         user,
-        loading,
         isAuthenticated,
+        loading,
         logout,
     } = useAuth();
 
     useEffect(() => {
-        if (!loading && !isAuthenticated) {
-            router.replace("/login");
+        if (loading) return;
+
+        if (!isAuthenticated || !user) {
+            const redirectUrl = encodeURIComponent(pathname || "/");
+            router.replace(`/login?redirect=${redirectUrl}`);
         }
-    }, [loading, isAuthenticated, router]);
+    }, [loading, isAuthenticated, user, pathname, router]);
 
     const handleLogout = async () => {
         try {

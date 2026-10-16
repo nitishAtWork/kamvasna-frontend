@@ -3,7 +3,7 @@ import {
     useEffect,
     useState,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -19,6 +19,23 @@ import { authApi } from "@/app/lib/auth";
 
 export default function LoginForm() {
     const router = useRouter();
+
+    const searchParams = useSearchParams();
+
+    const redirectPath = searchParams.get("redirect");
+
+    const getRedirectPath = () => {
+        // Prevent external URL redirects
+        if (
+            redirectPath &&
+            redirectPath.startsWith("/") &&
+            !redirectPath.startsWith("//")
+        ) {
+            return redirectPath;
+        }
+
+        return "/";
+    };
 
     const {
         login,
@@ -105,7 +122,7 @@ export default function LoginForm() {
 
         await loadCart();
 
-        router.push("/");
+        router.replace(getRedirectPath());
     }
 
     /*
@@ -211,7 +228,7 @@ export default function LoginForm() {
 
             await loadCart();
 
-            router.push("/");
+            router.replace(getRedirectPath());
         } catch (error) {
             console.error(
                 "OTP login failed:",
